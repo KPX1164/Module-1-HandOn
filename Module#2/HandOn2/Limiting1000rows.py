@@ -6,6 +6,7 @@ import pandas as pd
 import string
 import re
 from sklearn.feature_extraction.text import CountVectorizer
+import timeit
 def get_and_clean_data():
     data = pd.read_csv('../Resource/software_developer_united_states_1971_20191023_1.csv')
     description = data['job_description']
@@ -49,3 +50,12 @@ cv = CountVectorizer(analyzer=lambda x: x)
 # vectoriser = cv.fit
 X = cv.fit_transform(stemmed_description)
 print(pd.DataFrame(X.toarray(), columns=cv.get_feature_names_out()))
+
+XX = X.toarray()
+print(np.shape(np.matmul(X.toarray(), X.toarray().T)))
+# timeit.timeit(lambda: np.matmul(XX, XX.T), number=1)
+print(timeit.timeit(lambda: np.matmul(XX, XX.T), number=1))
+
+print(np.shape(X*X.T))
+# timeit.timeit(lambda: X*X.T, number=1)
+print(timeit.timeit(lambda: X*X.T, number=1))
