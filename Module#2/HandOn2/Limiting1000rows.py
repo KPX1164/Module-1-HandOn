@@ -59,3 +59,10 @@ print(timeit.timeit(lambda: np.matmul(XX, XX.T), number=1))
 print(np.shape(X*X.T))
 # timeit.timeit(lambda: X*X.T, number=1)
 print(timeit.timeit(lambda: X*X.T, number=1))
+
+
+print(timeit.timeit(lambda: np.matmul(XX, XX.T), number=3)/3)
+print(timeit.timeit(lambda: X.todok()*X.T.todok(), number=3)/3)
+print(timeit.timeit(lambda: X.tolil()*X.T.tolil(), number=3)/3)
+print(timeit.timeit(lambda: X.tocoo()*X.T.tocoo(), number=3)/3)
+print(timeit.timeit(lambda: X.tocsc()*X.T.tocsc(), number=3)/3)
