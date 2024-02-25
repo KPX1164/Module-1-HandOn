@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search</title>
+    <style>
+      #title {
+        font-weight: 800;
+      }
+      #link {
+        font-size: smaller;
+      }
+      #content {
+        color: rgba(0, 0, 0, 0.8);
+      }
+    </style>
+  </head>
+  <body>
+    <form action="#" class="center" onsubmit="return search(event)">
+      <input type="text" id="queryInput" />
+      <button type="submit" id="searchBtn">Search</button>
+    </form>
+
+    <div id="resultsDiv"></div>
+
+    <script>
+      const searchBtn = document.querySelector("#searchBtn");
+      const queryInput = document.querySelector("#queryInput");
+      const resultsDiv = document.querySelector("#resultsDiv");
+      const API_URL = "http://127.0.0.1:5000/manual_index";
+      const search = async (e) => {
+        e.preventDefault();
+        let query = queryInput.value;
+        const data = await fetch(API_URL + "?query=" + query);
+        res = await data.json();
+        res = res.results;
+
+        resultsDiv.innerHTML = "";
+        res.forEach((result) => {
+          const resultDiv = document.createElement("div");
+          let surroundingText = result.text;
+          if (result.text) {
+            const index = result.text.toLowerCase().indexOf(query.toLowerCase());
+            let startIndex = Math.max(0, index - 50);
+            let endIndex = Math.min(result.text.length, index + query.length + 50);
+            surroundingText = result.text.substring(startIndex, endIndex);
+            if (startIndex > 0) {
+                surroundingText = "... " + surroundingText;
+            }
+            if (endIndex < result.text.length) {
+                surroundingText += " ...";
+            }
+          }
+          const highlightedText = surroundingText.replace(
+            new RegExp(query, "gi"),
+            (match) => `<b>${match}</b>`
+          );
+          resultDiv.innerHTML = `
+            <p id="title">${result.title} (score: ${result.score})</p>
+            <a id="link" href="${result.url}">${result.url}</a>
+            <p id="content">${highlightedText}</p>
+          `;
+          resultsDiv.appendChild(resultDiv);
+        });
+        return false;
+      };
+    </script>
+  </body>
+</html>
