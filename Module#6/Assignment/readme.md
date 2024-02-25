@@ -1,0 +1,1 @@
+Adding `PageRank` and `BM25` to the search can improve relevance of result, `PageRank` finds hidden gems through links, while `BM25` focuses on content.  
